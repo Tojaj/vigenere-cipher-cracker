@@ -1,6 +1,6 @@
 # 1. project from course of cryptography
 
-https://www.fit.vutbr.cz/study/courses/index.php.en?id=8742
+More information: https://github.com/Tojaj/vigenere-cipher-cracker/wiki
 
 ## Building
 
