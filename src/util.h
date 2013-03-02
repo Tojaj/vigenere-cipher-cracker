@@ -7,4 +7,14 @@
   TypeName(const TypeName&);               \
   void operator=(const TypeName&)
 
+static inline int
+letter_index(char x)
+{
+  if (x >= 'A' && x <= 'Z')
+    return (x - 'A');
+  if (x >= 'a' && x <= 'z')
+    return (x - 'a');
+  return -1;
+};
+
 #endif  // VCC_UTIL_H_

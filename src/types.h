@@ -4,13 +4,14 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <array>
 
 static const int ALPHABET_LEN = 26;
 
-typedef float FAlphabet[ALPHABET_LEN];
-typedef long  LAlphabet[ALPHABET_LEN];
+typedef std::array<float, ALPHABET_LEN> FAlphabet;
+typedef std::array<long,  ALPHABET_LEN> LAlphabet;
 
-static const FAlphabet LETTER_FREQUENCY = {
+static const float LETTER_FREQUENCY[] = {
     8.167,  // a
     1.492,  // b
     2.782,  // c
