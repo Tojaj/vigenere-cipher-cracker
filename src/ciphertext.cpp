@@ -7,6 +7,7 @@
 
 #include "types.h"
 #include "util.h"
+#include "ngramcounter.h"
 
 CipherText::~CipherText()
 {
@@ -32,7 +33,6 @@ CipherText::length(unsigned int key_length, unsigned int substring_index) const
 
   size_t len  = length() / key_length;
   size_t rest = length() % key_length;
-  printf("(%u %u) [%lu] %lu | %lu\n", key_length, substring_index, ciphertext_.length(), len, rest);
   if (rest > 0 && substring_index < rest) len++;
   return len;
 }
@@ -69,6 +69,7 @@ CipherTextFactory::CipherTextFromStdin()
   char c;
   std::string text;
   LAlphabet stat;
+  NgramCounter ngramcounter;
 
   stat.fill(c);
   while (std::cin.get(c)) {
@@ -82,9 +83,12 @@ CipherTextFactory::CipherTextFromStdin()
     stat[index] += 1;
 
     // Ngram finding
-    // TODO
-
+    ngramcounter.put(c);
   }
+
+  ngramcounter.cleanup();
+  ngramcounter.print_content();
+  ngramcounter.find_longer_ngrams();
 
   // Construct a CipherText object and return it
   return new CipherText(text, stat);

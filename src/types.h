@@ -40,8 +40,8 @@ static const float LETTER_FREQUENCY[] = {
     0.074,  // z
   };
 
-typedef std::vector<unsigned int> NgramLengths;
-typedef std::vector<unsigned int> NgramIndexes;
+typedef std::vector<size_t> NgramLengths;
+typedef std::vector<size_t> NgramIndexes;
 typedef std::map<std::string, NgramIndexes> NgramMap;
 
 #endif  // VCC_TYPES_H_
