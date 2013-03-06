@@ -56,8 +56,23 @@ NgramCounter::find_longer_ngrams()
   // Inspect indexes and identify longer ngrams
   std::sort(merged_indexes.begin(), merged_indexes.end());
 
-  for (unsigned int x = 0; x < merged_indexes.size(); x++) {
-      printf("%d\n", merged_indexes[x]);
+  typedef std::vector<size_t[2]> NgramSequences;
+  NgramSequences sequences;
+  long long seq_begin = -1;
+  for (size_t x = 1; x < merged_indexes.size(); x++) {
+    printf("%d\n", merged_indexes[x]);
+    if ((merged_indexes[x-1] + 1) == merged_indexes[x]) {
+      if (seq_begin == -1) seq_begin = (x-1);
+    } else {
+      if (seq_begin != -1) {
+        sequences.push_back({ seq_begin, (x-1) });
+        seq_begin = -1;
+      }
+    }
+  }
+
+  for (size_t x = 0; x < sequences.size(); x++) {
+    printf(" %zu %zu\n", sequences[x][0], sequences[x][1]);
   }
 }
 
