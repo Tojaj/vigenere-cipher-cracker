@@ -69,7 +69,7 @@ CipherTextFactory::CipherTextFromStdin()
   char c;
   std::string text;
   LAlphabet stat;
-  NgramCounter ngramcounter;
+  NgramCounter *ngramcounter = new NgramCounter;
 
   stat.fill(0);
   while (std::cin.get(c)) {
@@ -83,11 +83,11 @@ CipherTextFactory::CipherTextFromStdin()
     stat[index] += 1;
 
     // Ngram finding
-    ngramcounter.put(c);
+    ngramcounter->put(c);
   }
 
-  ngramcounter.find_longer_ngrams(text);
-  ngramcounter.print_content();
+  ngramcounter->find_longer_ngrams(text);
+  ngramcounter->print_content();
 
   // Construct a CipherText object and return it
   return new CipherText(text, stat);

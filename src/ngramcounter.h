@@ -5,7 +5,7 @@
 
 #include "types.h"
 
-const static int NGRAMMAPS = 4;
+const static int NGRAMMAPS = 25;
 
 class NgramCounter {
  public:

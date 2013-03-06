@@ -40,7 +40,6 @@ void
 NgramCounter::find_longer_ngrams(std::string &text)
 {
   for (int nm_id = 1; nm_id < NGRAMMAPS; nm_id++) {
-    printf("ID: %d\n", nm_id);
     NgramIndexes merged_indexes;
     NgramMap::iterator it;
 
@@ -63,17 +62,18 @@ NgramCounter::find_longer_ngrams(std::string &text)
       if ((merged_indexes[x-1] + 1) == merged_indexes[x])
         longer_ngrams.push_back(merged_indexes[x-1]);
     }
-
+/*
     printf("Longer ngram sequences:\n");
     for (size_t x = 0; x < longer_ngrams.size(); x++)
       printf(" %zu\n", longer_ngrams[x]);
-
+*/
     // TODO create new ngrammap
     for (size_t x = 0; x < longer_ngrams.size(); x++) {
       std::string ngram = text.substr(longer_ngrams[x], (3 + nm_id));
       ngrammaps_[nm_id][ngram].push_back(longer_ngrams[x]);
     }
   }
+  cleanup(ngrammaps_[NGRAMMAPS-1]);
 }
 
 void
