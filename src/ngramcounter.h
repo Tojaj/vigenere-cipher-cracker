@@ -5,23 +5,25 @@
 
 #include "types.h"
 
+const static int NGRAMMAPS = 4;
+
 class NgramCounter {
  public:
   NgramCounter();
   // Process another text letter
   void put(char letter);
-  // Remove all ngrams with only one occurence
-  void cleanup();
   // Try to find ngrams with len >3 (original text needed)
-  void find_longer_ngrams();
+  void find_longer_ngrams(std::string &text);
   // Print whole content of current ngrammap
   void print_content();
   // Get ngrammap
-  NgramMap ngrammap();
+  NgramMap ngrammap(int id);
 
  protected:
-  NgramMap ngrammap_;
-  NgramMap ngrammap_4_;
+  // Remove all ngrams with only one occurence
+  void cleanup(NgramMap &map);
+
+  NgramMap ngrammaps_[NGRAMMAPS]; // 0 - 3grams, 1 - 4grams, ...
   char trigram[4];
   size_t count;
 };

@@ -71,7 +71,7 @@ CipherTextFactory::CipherTextFromStdin()
   LAlphabet stat;
   NgramCounter ngramcounter;
 
-  stat.fill(c);
+  stat.fill(0);
   while (std::cin.get(c)) {
     int index = letter_index(c);
     if (index == -1)
@@ -86,9 +86,8 @@ CipherTextFactory::CipherTextFromStdin()
     ngramcounter.put(c);
   }
 
-  ngramcounter.cleanup();
+  ngramcounter.find_longer_ngrams(text);
   ngramcounter.print_content();
-  ngramcounter.find_longer_ngrams();
 
   // Construct a CipherText object and return it
   return new CipherText(text, stat);

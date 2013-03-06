@@ -10,10 +10,10 @@ main()
   CipherText *ciphertext;
   printf("Hello world!\n");
   ciphertext = CipherTextFactory::CipherTextFromStdin();
-  std::cout << ciphertext->ciphertext();
 
   LAlphabet frequencies;
   frequencies = ciphertext->frequencies();
+  printf("Letter frequencies:\n");
   for (int x=0; x < ALPHABET_LEN; x++)
       printf(" %c) %ld\n", (x+'A'), frequencies[x]);
 

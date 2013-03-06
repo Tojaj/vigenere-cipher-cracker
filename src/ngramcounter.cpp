@@ -1,6 +1,7 @@
 #include "ngramcounter.h"
 
 #include <algorithm>
+#include <array>
 #include <string>
 
 NgramCounter::NgramCounter()
@@ -20,59 +21,58 @@ NgramCounter::put(char letter)
   ++count;
   if (count < 3) return;
 
-  ngrammap_[std::string(trigram)].push_back(count-3);
+  ngrammaps_[0][std::string(trigram)].push_back(count-3);
 }
 
 void
-NgramCounter::cleanup()
+NgramCounter::cleanup(NgramMap &map)
 {
-  NgramMap::iterator it = ngrammap_.begin();
-  while (it != ngrammap_.end()) {
+  NgramMap::iterator it = map.begin();
+  while (it != map.end()) {
     if (it->second.size() <= 1)
-      ngrammap_.erase(it++);
+      map.erase(it++);
     else
       ++it;
   }
 }
 
 void
-NgramCounter::find_longer_ngrams()
+NgramCounter::find_longer_ngrams(std::string &text)
 {
-  NgramIndexes merged_indexes;
-  NgramMap ngrammap;
-  NgramMap::iterator it;
+  for (int nm_id = 1; nm_id < NGRAMMAPS; nm_id++) {
+    printf("ID: %d\n", nm_id);
+    NgramIndexes merged_indexes;
+    NgramMap::iterator it;
 
-  cleanup();
+    cleanup(ngrammaps_[nm_id-1]);
 
-  // Make vector of all ngrams
-  it = ngrammap_.begin();
-  while (it != ngrammap_.end()) {
-    merged_indexes.insert(merged_indexes.end(),
-                          it->second.begin(),
-                          it->second.end());
-    it++;
-  }
-
-  // Inspect indexes and identify longer ngrams
-  std::sort(merged_indexes.begin(), merged_indexes.end());
-
-  typedef std::vector<size_t[2]> NgramSequences;
-  NgramSequences sequences;
-  long long seq_begin = -1;
-  for (size_t x = 1; x < merged_indexes.size(); x++) {
-    printf("%d\n", merged_indexes[x]);
-    if ((merged_indexes[x-1] + 1) == merged_indexes[x]) {
-      if (seq_begin == -1) seq_begin = (x-1);
-    } else {
-      if (seq_begin != -1) {
-        sequences.push_back({ seq_begin, (x-1) });
-        seq_begin = -1;
-      }
+    // Make vector of all ngrams
+    it = ngrammaps_[nm_id-1].begin();
+    while (it != ngrammaps_[nm_id-1].end()) {
+      merged_indexes.insert(merged_indexes.end(),
+                            it->second.begin(),
+                            it->second.end());
+      it++;
     }
-  }
 
-  for (size_t x = 0; x < sequences.size(); x++) {
-    printf(" %zu %zu\n", sequences[x][0], sequences[x][1]);
+    // Inspect indexes and identify ngrams with len+1
+    std::sort(merged_indexes.begin(), merged_indexes.end());
+
+    NgramIndexes longer_ngrams;
+    for (size_t x = 1; x < merged_indexes.size(); x++) {
+      if ((merged_indexes[x-1] + 1) == merged_indexes[x])
+        longer_ngrams.push_back(merged_indexes[x-1]);
+    }
+
+    printf("Longer ngram sequences:\n");
+    for (size_t x = 0; x < longer_ngrams.size(); x++)
+      printf(" %zu\n", longer_ngrams[x]);
+
+    // TODO create new ngrammap
+    for (size_t x = 0; x < longer_ngrams.size(); x++) {
+      std::string ngram = text.substr(longer_ngrams[x], (3 + nm_id));
+      ngrammaps_[nm_id][ngram].push_back(longer_ngrams[x]);
+    }
   }
 }
 
@@ -80,19 +80,22 @@ void
 NgramCounter::print_content()
 {
   NgramMap::iterator it;
-  for (it = ngrammap_.begin(); it != ngrammap_.end(); ++it) {
-    //NgramIndexes::size_type len = it->second.size();
-    auto len = it->second.size();
-    auto x = len;
-    printf("%s)", it->first.c_str());
-    for (x = 0; x < len; x++)
-      printf(" %zu", it->second[x]);
-    putchar('\n');
+  for (int x=0; x < NGRAMMAPS; x++) {
+    printf("%d-grams:\n", x+3);
+    for (it = ngrammaps_[x].begin(); it != ngrammaps_[x].end(); ++it) {
+      //NgramIndexes::size_type len = it->second.size();
+      auto len = it->second.size();
+      auto x = len;
+      printf(" %s)", it->first.c_str());
+      for (x = 0; x < len; x++)
+        printf(" %zu", it->second[x]);
+      putchar('\n');
+    }
   }
 }
 
 NgramMap
-NgramCounter::ngrammap()
+NgramCounter::ngrammap(int id)
 {
-  return ngrammap_;
+  return ngrammaps_[id];
 }
