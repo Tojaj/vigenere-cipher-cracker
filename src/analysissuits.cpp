@@ -93,6 +93,7 @@ VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
 
   // Make vector of <number of occurences, length>
   std::sort(lengths.begin(), lengths.end());
+  Occurence occurence;
   Occurences occurences;
   size_t prev_val = lengths[0];
   size_t prev_val_count = 1;
@@ -100,12 +101,16 @@ VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
     if (lengths[x-1] == lengths[x]) {
       prev_val_count++;
     } else {
-      occurences.push_back({{prev_val_count, prev_val}});
+      occurence[0] = prev_val_count;
+      occurence[1] = prev_val;
+      occurences.push_back(occurence);
       prev_val = lengths[x];
       prev_val_count = 1;
     }
   }
-  occurences.push_back({{prev_val_count, prev_val}});
+  occurence[0] = prev_val_count;
+  occurence[1] = prev_val;
+  occurences.push_back(occurence);
 
   // Sort lengths by number of occurences
   std::sort(occurences.begin(), occurences.end(), sort_by_first_item);
