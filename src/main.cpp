@@ -4,6 +4,7 @@
 
 #include "ciphertext.h"
 #include "analysissuits.h"
+#include "cracker.h"
 
 #include "util.h"
 
