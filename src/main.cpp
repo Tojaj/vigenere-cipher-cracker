@@ -16,9 +16,13 @@ main()
 
   LAlphabet frequencies;
   frequencies = ciphertext->frequencies();
+/*
   printf("Letter frequencies:\n");
   for (int x=0; x < ALPHABET_LEN; x++)
       printf(" %c) %ld\n", (x+'A'), frequencies[x]);
+*/
+
+//  stats->ngramcounter_.print_content();
 
   float friedman = VigenereStatAnalysis::friedman_test(frequencies);
   printf("Friedman test: %f\n", friedman);

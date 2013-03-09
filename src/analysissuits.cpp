@@ -23,7 +23,6 @@ void
 VigenereStreamAnalysis::put_eof(std::string &text)
 {
   ngramcounter_.find_longer_ngrams(text);
-  ngramcounter_.print_content(); // DEBUG
 }
 
 float
@@ -60,15 +59,16 @@ VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
 {
   PossibleLengths lengths;
   PossibleLengths::iterator lengths_it;
-  int current_map = NGRAMMAPS - 1;
-  size_t take_only_longer_than = 3;
+  size_t min_map = ((NGRAMMAPS - 2) > 0) ? NGRAMMAPS-2 : 0;
+  size_t take_only_longer_than = 4;
 
   // Build vector of possible lengths
   // Try to build it from ngrams that are:
   //   - longer than others
   //   - have more than take_only_longer_than ocurrences
   while (1) {
-    while (current_map >= 0 && lengths.size() < 10) {
+    size_t current_map = NGRAMMAPS-1;
+    while (current_map >= min_map && lengths.size() < 10) {
       NgramMap *ngm = ngramcounter.ngrammap(current_map);
       NgramMap::iterator it = ngm->begin();
       for (; it != ngm->end(); it++) {
@@ -76,16 +76,21 @@ VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
         if (it->second.size() <= take_only_longer_than)
           continue;
         gcd = index_distances_gcd(it->second);
+//        for (size_t x = 0; x < it->second.size(); x++)
+//          printf("%zu ", it->second[x]);
+//        printf("[%zu]\n", gcd);
         lengths.push_back(gcd);
       }
       current_map--;
     }
 
     // Check if we have enought of lenghts
-    if (lengths.size() < 10 && take_only_longer_than > 1)
+    if (lengths.size() < 10 && take_only_longer_than > 1) {
       --take_only_longer_than;
-    else
+      min_map = (min_map > 0) ? min_map-1 : 0;
+    } else {
       break;
+    }
   }
 
   if (lengths.size() == 0)

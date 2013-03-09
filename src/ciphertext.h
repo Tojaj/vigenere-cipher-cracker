@@ -8,6 +8,8 @@
 #include "util.h"
 #include "analysissuits.h"
 
+static const unsigned long MAX_ANALYZED_INPUT_LEN = 200000;
+
 class CipherText {
  public:
   CipherText(std::string &text, VigenereStreamAnalysis *stats):

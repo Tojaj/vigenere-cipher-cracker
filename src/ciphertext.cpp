@@ -74,6 +74,7 @@ CipherText *
 CipherTextFactory::CipherTextFromStdin()
 {
   char c;
+  unsigned long readed = 0;
   std::string text;
   VigenereStreamAnalysis *stat = new VigenereStreamAnalysis;
 
@@ -81,6 +82,9 @@ CipherTextFactory::CipherTextFromStdin()
     int index = letter_index(c);
     if (index == -1)
       continue;
+    readed++;
+    if (readed > MAX_ANALYZED_INPUT_LEN)
+      break;
     text.push_back(c);
     stat->put(c);
   }
