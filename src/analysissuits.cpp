@@ -35,7 +35,7 @@ VigenereStatAnalysis::friedman_test(const LAlphabet letter_frequencies) {
   long long len = 0L;
   float denominator;
 
-  for (int x=0; x < ALPHABET_LEN; x++) {
+  for (size_t x=0; x < ALPHABET_LEN; x++) {
     len += letter_frequencies[x];
     sum += letter_frequencies[x] * (letter_frequencies[x] - 1);
 //    printf (" Sum: %10lld - %c: %ld\n", sum, (x+'A'), letter_frequencies[x]);
@@ -52,7 +52,7 @@ VigenereStatAnalysis::friedman_test(const LAlphabet letter_frequencies) {
 
 typedef std::array<size_t, 2> Occurence;
 typedef std::vector<Occurence> Occurences;
-static bool sort_by_first_item(Occurence a, Occurence b) { return a[0] >= b[0]; };
+static bool sort_by_first_item(const Occurence &a, const Occurence &b) { return a[0] >= b[0]; };
 
 PossibleLengths
 VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)

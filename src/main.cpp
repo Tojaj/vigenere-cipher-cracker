@@ -26,11 +26,16 @@ main()
 //  stats->ngramcounter_.print_content();
 
   float friedman = VigenereStatAnalysis::friedman_test(frequencies);
-  printf("Friedman test: %f\n", friedman);
+//  printf("Friedman test: %f\n", friedman);
   PossibleLengths lens = VigenereStatAnalysis::kasisky_test(stats->ngramcounter_);
-  for (size_t x = 0; x < lens.size(); x++) {
-    printf(" > %zu\n", lens[x]);
-  }
+//  for (size_t x = 0; x < lens.size(); x++) {
+//    printf(" > %zu\n", lens[x]);
+//  }
+
+  std::string key = VigenereCracker::crackit(ciphertext, lens[0]);
+//  printf("KEY: %s\n", key.c_str());
+
+  printf("%f;%zu;%zu;%s\n", friedman, lens[0], lens[0], key.c_str());
 
   return EXIT_SUCCESS;
 }

@@ -6,7 +6,7 @@
 #include <map>
 #include <array>
 
-static const int ALPHABET_LEN = 26;
+static const size_t ALPHABET_LEN = 26;
 
 typedef std::array<float, ALPHABET_LEN> FAlphabet;
 typedef std::array<long,  ALPHABET_LEN> LAlphabet;
