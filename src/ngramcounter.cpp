@@ -39,11 +39,11 @@ NgramCounter::cleanup(NgramMap &map)
 void
 NgramCounter::find_longer_ngrams(std::string &text)
 {
+  cleanup(ngrammaps_[0]);
+
   for (int nm_id = 1; nm_id < NGRAMMAPS; nm_id++) {
     NgramIndexes merged_indexes;
     NgramMap::iterator it;
-
-    cleanup(ngrammaps_[nm_id-1]);
 
     // Make vector of all ngrams
     it = ngrammaps_[nm_id-1].begin();
@@ -72,8 +72,21 @@ NgramCounter::find_longer_ngrams(std::string &text)
       std::string ngram = text.substr(longer_ngrams[x], (3 + nm_id));
       ngrammaps_[nm_id][ngram].push_back(longer_ngrams[x]);
     }
+
+    // Remove ngrams that had only one occurence
+    cleanup(ngrammaps_[nm_id]);
+/*
+    // Remove short ngrams that are infact only substrings of longer ngrams
+    it = ngrammaps_[nm_id-1].begin();
+    while (it != ngrammaps_[nm_id-1].end()) {
+      NgramIndexes *indexes = it->second;
+      NgramIndexes::iterator iit = indexes->begin();
+      for (; iit != indexes->end(); iit++) {
+        if (*iit)
+      }
+    }
+*/
   }
-  cleanup(ngrammaps_[NGRAMMAPS-1]);
 }
 
 void
@@ -94,8 +107,8 @@ NgramCounter::print_content()
   }
 }
 
-NgramMap
+NgramMap *
 NgramCounter::ngrammap(int id)
 {
-  return ngrammaps_[id];
+  return &(ngrammaps_[id]);
 }

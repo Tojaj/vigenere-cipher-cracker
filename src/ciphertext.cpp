@@ -8,6 +8,7 @@
 #include "types.h"
 #include "util.h"
 #include "ngramcounter.h"
+#include "analysissuits.h"
 
 CipherText::~CipherText()
 {
@@ -40,7 +41,7 @@ CipherText::length(unsigned int key_length, unsigned int substring_index) const
 LAlphabet
 CipherText::frequencies()
 {
-  return letter_frequencies;
+  return stats_->letter_frequencies_;
 }
 
 LAlphabet
@@ -63,31 +64,27 @@ CipherText::frequencies(unsigned int key_length, unsigned int substring_index)
   return alphabet;
 }
 
+VigenereStreamAnalysis *
+CipherText::stats()
+{
+  return stats_;
+}
+
 CipherText *
 CipherTextFactory::CipherTextFromStdin()
 {
   char c;
   std::string text;
-  LAlphabet stat;
-  NgramCounter *ngramcounter = new NgramCounter;
+  VigenereStreamAnalysis *stat = new VigenereStreamAnalysis;
 
-  stat.fill(0);
   while (std::cin.get(c)) {
     int index = letter_index(c);
     if (index == -1)
       continue;
-
     text.push_back(c);
-
-    // Count letter statistic
-    stat[index] += 1;
-
-    // Ngram finding
-    ngramcounter->put(c);
+    stat->put(c);
   }
-
-  ngramcounter->find_longer_ngrams(text);
-  ngramcounter->print_content();
+  stat->put_eof(text);
 
   // Construct a CipherText object and return it
   return new CipherText(text, stat);

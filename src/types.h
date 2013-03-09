@@ -40,6 +40,8 @@ static const float LETTER_FREQUENCY[] = {
     0.074,  // z
   };
 
+typedef std::vector<size_t> Distances;
+typedef std::vector<size_t> PossibleLengths;
 typedef std::vector<size_t> NgramLengths;
 typedef std::vector<size_t> NgramIndexes;
 typedef std::map<std::string, NgramIndexes> NgramMap;

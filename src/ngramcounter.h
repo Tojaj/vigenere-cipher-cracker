@@ -5,7 +5,7 @@
 
 #include "types.h"
 
-const static int NGRAMMAPS = 25;
+const static int NGRAMMAPS = 5;
 
 class NgramCounter {
  public:
@@ -17,7 +17,7 @@ class NgramCounter {
   // Print whole content of current ngrammap
   void print_content();
   // Get ngrammap
-  NgramMap ngrammap(int id);
+  NgramMap *ngrammap(int id);
 
  protected:
   // Remove all ngrams with only one occurence
