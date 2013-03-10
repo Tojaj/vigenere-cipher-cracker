@@ -52,7 +52,13 @@ VigenereStatAnalysis::friedman_test(const LAlphabet letter_frequencies) {
 
 typedef std::array<size_t, 2> Occurence;
 typedef std::vector<Occurence> Occurences;
-static bool sort_by_first_item(const Occurence &a, const Occurence &b) { return a[0] >= b[0]; };
+//static bool sort_by_first_item(const Occurence &a, const Occurence &b) { return a[0] >= b[0]; };
+
+struct occurence_cmp {
+  bool operator ()(Occurence const& a, Occurence const& b) const {
+    return a[0] < b[0];
+  }
+};
 
 PossibleLengths
 VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
@@ -118,7 +124,8 @@ VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
   occurences.push_back(occurence);
 
   // Sort lengths by number of occurences
-  std::sort(occurences.begin(), occurences.end(), sort_by_first_item);
+  //std::sort(occurences.begin(), occurences.end(), sort_by_first_item);
+  std::sort(occurences.begin(), occurences.end(), occurence_cmp());
   lengths.clear();
   for (size_t x=0; x < occurences.size(); x++)
     lengths.push_back(occurences[x][1]);

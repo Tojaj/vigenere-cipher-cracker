@@ -32,10 +32,12 @@ main()
 //    printf(" > %zu\n", lens[x]);
 //  }
 
-  std::string key = VigenereCracker::crackit(ciphertext, lens[0]);
+  std::string key = VigenereCracker::crackit(ciphertext, lens.back());
 //  printf("KEY: %s\n", key.c_str());
 
   printf("%f;%zu;%zu;%s\n", friedman, lens[0], lens[0], key.c_str());
+
+  delete ciphertext;
 
   return EXIT_SUCCESS;
 }

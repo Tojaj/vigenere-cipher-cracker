@@ -12,7 +12,7 @@
 
 CipherText::~CipherText()
 {
-  ;
+  delete stats_;
 }
 
 std::string
