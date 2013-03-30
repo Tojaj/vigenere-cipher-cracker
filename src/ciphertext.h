@@ -8,7 +8,7 @@
 #include "util.h"
 #include "analysissuits.h"
 
-static const unsigned long MAX_ANALYZED_INPUT_LEN = 200000;
+static const unsigned long MAX_ANALYZED_INPUT_LEN = 150000;
 
 class CipherText {
  public:

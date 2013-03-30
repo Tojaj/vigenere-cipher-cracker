@@ -21,6 +21,7 @@ letter_index(char x)
   return -1;
 };
 
+size_t binary_gcd(size_t u, size_t v);
 size_t distances_gcd(const Distances &distances);
 size_t index_distances_gcd(const NgramIndexes &indexes);
 

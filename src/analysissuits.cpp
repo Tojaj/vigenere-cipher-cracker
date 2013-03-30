@@ -38,14 +38,9 @@ VigenereStatAnalysis::friedman_test(const LAlphabet letter_frequencies) {
   for (size_t x=0; x < ALPHABET_LEN; x++) {
     len += letter_frequencies[x];
     sum += letter_frequencies[x] * (letter_frequencies[x] - 1);
-//    printf (" Sum: %10lld - %c: %ld\n", sum, (x+'A'), letter_frequencies[x]);
   }
   denominator = len * (len - 1);
   k_o = sum / denominator;
-//  printf("Denominator: %f\n", denominator);
-//  printf("k_r: %f\n", k_r);
-//  printf("k_p: %f\n", k_p);
-//  printf("k_o: %f\n", k_o);
 
   return (k_p - k_r) / (k_o - k_r);
 }
@@ -59,6 +54,40 @@ struct occurence_cmp {
     return a[0] < b[0];
   }
 };
+
+static void
+heuristic(PossibleLengths &lengths, Occurence first_o, Occurence second_o)
+{
+  size_t val_1 = first_o[1];
+  size_t val_2 = second_o[1];
+  size_t occurences_1 = first_o[0];
+  size_t occurences_2 = second_o[0];
+
+  if (val_1 == 1 || val_2 == 1)
+    // Nothing to do
+    goto keep_it;
+
+  if (occurences_1 > 3 && occurences_1 / occurences_2 > 2)
+    goto keep_it;
+
+  if (val_1 > 10 && val_2 < val_1) {
+    size_t gcd = binary_gcd(val_1, val_2);
+    if (gcd == val_2)
+      goto swap_it;
+  }
+
+// Keep order
+keep_it:
+  lengths.push_back(val_1);
+  lengths.push_back(val_2);
+  return;
+
+// Second element goes first
+swap_it:
+  lengths.push_back(val_2);
+  lengths.push_back(val_1);
+  return;
+}
 
 PossibleLengths
 VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
@@ -126,9 +155,26 @@ VigenereStatAnalysis::kasisky_test(NgramCounter &ngramcounter)
   // Sort lengths by number of occurences
   //std::sort(occurences.begin(), occurences.end(), sort_by_first_item);
   std::sort(occurences.begin(), occurences.end(), occurence_cmp());
+  std::reverse(occurences.begin(), occurences.end());
   lengths.clear();
-  for (size_t x=0; x < occurences.size(); x++)
+
+  // Heuristic - The first pushed element shoud be a sanity number
+  // First two elements push manualy (the most sane number first)
+  size_t occ_len = occurences.size();
+  if (occ_len == 1) {
+    // There is only one item
+    lengths.push_back(occurences[0][1]);
+  } else if (occ_len > 1) {
+    // Two frist elements insert ordered by heuristic
+    heuristic(lengths, occurences[0], occurences[1]);
+  }
+
+  for (size_t x=0; x < occ_len; x++)
+    printf("%lu | %lu\n", occurences[x][0], occurences[x][1]);
+
+  for (size_t x=2; x < occ_len; x++) {
     lengths.push_back(occurences[x][1]);
+  }
 
   return lengths;
 }

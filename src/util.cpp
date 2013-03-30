@@ -1,6 +1,6 @@
 #include "util.h"
 
-static size_t
+size_t
 binary_gcd(size_t u, size_t v)
 {
   // Algorithm taken from:
